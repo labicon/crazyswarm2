@@ -1,0 +1,10 @@
+#!/usr/bin/bash
+# Helper script to have vicon dump out its detected markers.
+# NOTE: this is simply a wrapper around the example compiled in [`libmotioncapture`](https://github.com/IMRCLab/libmotioncapture)
+# that's been hardcoded for our setup.
+
+MOCAP="vicon"
+HOSTNAME="192.168.1.2:801"
+echo "Running vicondump on IP: $HOSTNAME"
+
+~/.local/bin/_motioncapture_example $MOCAP $HOSTNAME
