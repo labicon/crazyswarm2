@@ -1,10 +1,9 @@
 /motion_capture_tracking:
   ros__parameters:
-    type: "optitrack"
-    hostname: "130.149.82.37"
-
+    type: "vicon"
+    hostname: "192.168.1.2:801"
+    
     mode: "libobjecttracker" # one of motionCapture,libRigidBodyTracker
-
     marker_configurations:
       default: # for standard Crazyflie
         offset: [0.0, 0.0, 0.0]
@@ -13,10 +12,34 @@
           p1: [-0.042,  0.042, 0.0  ]  # back left   (M3)
           p2: [-0.042, -0.042, 0.0  ]  # back right  (M2)
           p3: [ 0.042, -0.042, 0.0  ]  # front right (M1)
+      icon: # iconlab marker configuration
+        offset: [0.0, 0.00, 0.00]
+        points:
+          # CF 3
+          p0: [-0.0165853,0.00814843,0.0581259]
+          p1: [0.0125768,-0.0225262,0.0591859]
+          p2: [0.0424689,0.00680992,0.0625171]
+          p3: [0.0135915,0.012417,0.0603406]
+          # CF 4
+          # p0: [-0.00511412,0.0322188,0.0598801]
+          # p1: [-0.0327488,-0.000322166,0.0602731]
+          # p2: [-0.00201724,-0.00305452,0.0603271]
+          # p3: [0.0273128,0.00433627,0.0588416]    
+          # CF 8
+          # p0: [-0.0239211,0.0112456,0.0636617]
+          # p1: [-0.000580802,-0.023744,0.0598813]
+          # p2: [0.0343909,-0.00022473,0.0568971]
+          # p3: [0.00607386,0.0103395,0.0614645]
+          # CF 10
+          # p0: [0.0065205,0.0321516,0.0608977]
+          # p1: [0.0388603,0.00383568,0.0601037]
+          # p2: [-0.0210251,0.000164702,0.0613558]
+          # p3: [0.008114,-0.00342294,0.0606327]
       default_single_marker:
         offset: [0.0, -0.01, -0.04]
         points:
           p0: [0.0177184,0.0139654,0.0557585]
+          # p0: [0.0177184,0.0139654,0.0557585]
       mocap_deck:
         offset: [0.0, 0.0, -0.01]
         points:
@@ -41,8 +64,10 @@
 
     dynamics_configurations:
       default:
-        max_velocity: [2, 2, 3] # m/s
-        max_angular_velocity: [20, 20, 10] # rad/s
+        max_velocity: [10, 10, 10] # m/s
+        # max_velocity: [2, 2, 3] # m/s
+        # max_angular_velocity: [20, 20, 10] # rad/s
+        max_angular_velocity: [100, 100, 100] # rad/s
         max_roll: 1.4 #rad
         max_pitch: 1.4 #rad
         max_fitness_score: 0.001
