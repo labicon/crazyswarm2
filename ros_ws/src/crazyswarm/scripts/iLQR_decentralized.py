@@ -1,7 +1,7 @@
 #make sure decentralized is in PYTHONPATH
 from time import perf_counter as pc
 import warnings
-from timer_sleep import set_sleep_rate
+from dpilqr.timer_sleep import set_sleep_rate
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
@@ -15,8 +15,9 @@ import roslib
 import math
 # import tf
 import geometry_msgs.msg
-from pycrazyswarm import *
-from pycrazyswarm import crazyflie
+# from pycrazyswarm import *
+# from pycrazyswarm import crazyflie
+from crazyswarm2 import crazyflie
 import datetime
 import csv
 import time
@@ -83,7 +84,7 @@ def perform_experiment(centralized=False):
     x_goal = np.hstack([goal_pos_list,np.zeros((n_agents,3))]).flatten()
 
     dt = 0.1
-    N = 10
+    N = 20
     ids = [100 + i for i in range(n_agents)]
     model = dec.QuadcopterDynamics6D
     dynamics = dec.MultiDynamicalModel([model(dt, id_) for id_ in ids])
@@ -113,7 +114,7 @@ def perform_experiment(centralized=False):
     U_full = np.zeros((0, n_controls*n_agents))
     X = np.tile(xi,(N+1, 1))
     
-    while not np.all(dec.distance_to_goal(xi,x_goal,n_agents,n_states,3) <= 0.2):
+    while not np.all(dec.distance_to_goal(xi,x_goal,n_agents,n_states,3) <= 0.15):
 
         # How to feed state back into decentralization?
         #  1. Only decentralize at the current state.
@@ -182,8 +183,6 @@ def perform_experiment(centralized=False):
 
 
 if __name__ == '__main__':
-    #rospy.init_node('tf_listener')
-
     swarm = Crazyswarm()
     # swarm.allcfs.setParam("colAv/enable", 1) THIS LINE GIVES WARNING WHEN LAUNCHED
     timeHelper = swarm.timeHelper
@@ -192,7 +191,7 @@ if __name__ == '__main__':
 
     num_cfs = len(swarm.allcfs.crazyflies)
 
-    rate.sleep()
+    #rate.sleep() ?
 
     if LOG_DATA:
         print("### Logging data to file: " + csv_filename)
