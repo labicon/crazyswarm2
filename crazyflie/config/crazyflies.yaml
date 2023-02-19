@@ -1,17 +1,17 @@
 # named list of all robots
 robots:
   cf01:
-    enabled: true 
+    enabled: false 
     uri: radio://0/100/2M/E7E7E7E701
     initial_position: [0, 0, 0]
     type: cf21
   cf03:
-    enabled: false 
+    enabled: true
     uri: radio://0/100/2M/E7E7E7E703
-    initial_position: [0, 0, 0]
+    initial_position: [+1, 0, 0]
     type: cf21
   cf04:
-    enabled: false 
+    enabled: true
     uri: radio://0/100/2M/E7E7E7E704
     initial_position: [0, 0, 0]
     type: cf21
@@ -21,9 +21,9 @@ robots:
     initial_position: [0, 0, 0]
     type: cf21
   cf10:
-    enabled: false 
-    uri: radio://0/100/2M/E7E7E7E70A
-    initial_position: [0, 0, 0]
+    enabled: true 
+    uri: radio://0/120/2M/E7E7E7E70A
+    initial_position: [-1, 0, 0]
     type: cf21
 
 # Definition of the various robot types
@@ -32,7 +32,7 @@ robot_types:
     motion_capture:
       enabled: true
       # only if enabled; see motion_capture.yaml
-      marker: icon 
+      marker: default_single_marker
       dynamics: default
     big_quad: false
     battery:
