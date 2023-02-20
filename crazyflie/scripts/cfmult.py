@@ -76,7 +76,7 @@ def main():
 
 def _read_yaml_uris(configpath):
     if not configpath.is_dir():
-       raise ValueError("configpath input does not exist.")
+       raise ValueError(f"configpath {configpath} input does not exist.")
     yamlpath = configpath / "crazyflies.yaml"
     if not yamlpath.is_file():
         raise FileNotFoundError(f"{yamlpath} not found in {configpath}.")
@@ -84,7 +84,7 @@ def _read_yaml_uris(configpath):
     yaml = YAML()
     cfg = yaml.load(yamlpath)
     
-    uris = [val['uri'] for val in cfg['robots'].values() if val['enabled']]
+    return [val['uri'] for val in cfg['robots'].values() if val['enabled']]
 
 
 if __name__ == "__main__":
