@@ -18,6 +18,7 @@ import rclpy.node
 import rowan
 from std_srvs.srv import Empty
 from geometry_msgs.msg import Point, Twist
+from tf2_msgs.msg import TFMessage
 from rcl_interfaces.srv import GetParameters, SetParameters, ListParameters, GetParameterTypes
 from rcl_interfaces.msg import Parameter, ParameterValue, ParameterType
 from crazyflie_interfaces.srv import Takeoff, Land, GoTo, UploadTrajectory, StartTrajectory, NotifySetpointsStop
@@ -706,6 +707,37 @@ class CrazyflieServer(rclpy.node.Node):
             cfid = int(cf.uri[-2:], 16)
             self.crazyfliesById[cfid] = cf
 
+        # Create cf pose subscriber
+        self.subscriber = self.create_subscription(TFMessage, 'tf', self.pose_cb, 0)
+        # Position and quaternion in world frame.
+        self.pose = {}
+
+    def pose_cb(self, msg):
+        """Update the server's understanding of the poses for each crazyflie
+
+        This is utilized when a real-time understanding of the cf positions
+        and/or rotations is required. The result will update the internal
+        ``pose`` attribute.
+
+        """
+        for transform in msg.transforms:
+            position_i = np.array([
+                transform.transform.translation.x,
+                transform.transform.translation.y,
+                transform.transform.translation.z,
+                ])
+            rotation_i = np.array([
+                transform.transform.rotation.x,
+                transform.transform.rotation.y,
+                transform.transform.rotation.z,
+                transform.transform.rotation.w,
+                ])
+            self.pose[transform.child_frame_id] = (position_i, rotation_i)
+
+    @property
+    def position(self):
+        return np.vstack([pose[0] for pose in self.pose.values()])
+
     def emergency(self):
         """Emergency stop. Cuts power; causes future commands to be ignored.
 
@@ -791,7 +823,6 @@ class CrazyflieServer(rclpy.node.Node):
     def goToAbsolute(self, goals, yaw=0.0, duration=2.0):
         """Convenience command to send goTo's to all crazyflies at once"""
         for pos, cf in zip(goals, self.crazyflies):
-            print(f"cf {cf} going to {pos}")
             cf.goTo(pos, yaw, duration)
             # cf.cmdPosition(pos, yaw)
 
