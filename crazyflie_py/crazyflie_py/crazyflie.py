@@ -733,7 +733,7 @@ class CrazyflieServer(rclpy.node.Node):
                 transform.transform.rotation.w,
                 ])
             self.pose[transform.child_frame_id] = (position_i, rotation_i)
-
+        print(f'measured pose is {self.pose}')
     @property
     def position(self):
         return np.vstack([pose[0] for pose in self.pose.values()])

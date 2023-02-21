@@ -16,9 +16,9 @@ robots:
     initial_position: [0, 0, 0]
     type: cf21
   cf08:
-    enabled: false 
+    enabled: false
     uri: radio://0/100/2M/E7E7E7E708
-    initial_position: [0, 0, 0]
+    initial_position: [0, -1, 0]
     type: cf21
   cf10:
     enabled: true 
