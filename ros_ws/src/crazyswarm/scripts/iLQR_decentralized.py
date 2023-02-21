@@ -1,23 +1,16 @@
 #make sure decentralized is in PYTHONPATH
+
+from crazyflie_py import *
+
 from time import perf_counter as pc
 import warnings
-from dpilqr.timer_sleep import set_sleep_rate
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
 from dpilqr import split_agents, plot_solve, pos_mask
 import dpilqr as dec
-import pocketknives
 
-import roslib
-# import rospy
-import math
-# import tf
-import geometry_msgs.msg
-# from pycrazyswarm import *
-# from pycrazyswarm import crazyflie
-from crazyswarm2 import crazyflie
 import datetime
 import csv
 import time
@@ -41,26 +34,44 @@ GOHOME_DURATION = 6.0
 FLY = True
 
 # Defining takeoff and experiment start position
-start_pos_drone1 = [0., 0., 1.0]
-start_pos_drone2 = [0.5, 0.5, 1.0]
-start_pos_drone3 = [-0.5, -0.5, 1.0]
+"""Case 1: 4 drones"""
+"""
+1_________2
 
-goal_pos_drone1 = [3.0, 3.0, 3.0]
-goal_pos_drone2 = [-3.0, 3.0, 2.5]
-goal_pos_drone3 = [2.5, 1.5, 3.1]
+     O
 
-start_pos_list = [start_pos_drone1,start_pos_drone2,start_pos_drone3]
-goal_pos_list = [goal_pos_drone1,goal_pos_drone2 , goal_pos_drone3]
+3_________4
+
+
+"""
+
+
+start_pos_drone1 = [-2.5, 2.5, 1.0]
+start_pos_drone2 = [2.5, 2.5, 1.0]
+start_pos_drone3 = [-2.5, -2.5, 1.0]
+start_pos_drone4 = [2.5, -2.5, 1.0]
+
+goal_pos_drone1 = [2.5, -2.5, 1.0]
+goal_pos_drone2 = [-2.5, -2.5, 1.0]
+goal_pos_drone3 = [2.5, 2.5, 1.0]
+goal_pos_drone4 = [-2.5, 2.5, 1.0]
+
+
+start_pos_list = [start_pos_drone1,start_pos_drone2,\
+                  start_pos_drone3,start_pos_drone4]
+
+goal_pos_list = [goal_pos_drone1,goal_pos_drone2 , \
+                 goal_pos_drone3, start_pos_drone4]
 
 
 """
 The states of the quadcopter are: px, py ,pz, vx, vy, vz
 """
 
-rate = set_sleep_rate(2)
+
 
 def perform_experiment(centralized=False):
-
+    
     fig = plt.figure()
     
     # Wait for button press for take off
@@ -75,7 +86,7 @@ def perform_experiment(centralized=False):
     # Wait for button press to begin experiment
     input("##### Press Enter to Begin Experiment #####")
     
-    n_agents = 3
+    n_agents = 4
     n_states = 6
     n_controls = 3
     n_dim = 3
@@ -108,7 +119,7 @@ def perform_experiment(centralized=False):
     U = np.zeros((N, n_controls*n_agents))
     ids = prob.ids.copy()
 
-    step_size = 1
+    step_size = 5
     
     X_full = np.zeros((0, n_states*n_agents))
     U_full = np.zeros((0, n_controls*n_agents))
@@ -170,7 +181,7 @@ def perform_experiment(centralized=False):
             timestampString = str(time.time())
             csvwriter.writerow([timestampString] + pos_cfs + vel_cfs)
 
-        rate.sleep()
+        timeHelper.sleepForRate(2)
 
     input("##### Press Enter to Go Back to Origin #####")
     
@@ -187,12 +198,11 @@ if __name__ == '__main__':
     # swarm.allcfs.setParam("colAv/enable", 1) THIS LINE GIVES WARNING WHEN LAUNCHED
     timeHelper = swarm.timeHelper
     allcfs = swarm.allcfs
-    # timeHelper.sleep(1.5+TAKEOFF_Z)
-
+    timeHelper.sleep(1.5+TAKEOFF_Z)
     num_cfs = len(swarm.allcfs.crazyflies)
-
-    #rate.sleep() ?
-
+    
+    
+   
     if LOG_DATA:
         print("### Logging data to file: " + csv_filename)
         csvfile = open(csv_filename, 'w')
@@ -206,6 +216,7 @@ if __name__ == '__main__':
 
     except Exception as e:
         print ("##### Python exception occurred! Returning to start location and landing #####")
+        swarm.allcfs.setParam("colAv/enable", 1)
         if FLY:
             swarm.allcfs.goToAbsolute(start_pos_list)
             timeHelper.sleep(4.0)
@@ -216,5 +227,6 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         print ("##### KeyboardInterrupt detected. Landing all CFs  #####")
         if FLY:
+            swarm.allcfs.goToAbsolute(start_pos_list)
             swarm.allcfs.land(targetHeight=0.05, duration=3.0)
             timeHelper.sleep(4.0)
