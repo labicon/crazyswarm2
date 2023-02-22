@@ -8,12 +8,12 @@ robots:
   cf03:
     enabled: true
     uri: radio://0/100/2M/E7E7E7E703
-    initial_position: [+1, 0, 0]
+    initial_position: [0.5, 1.0, 0]
     type: cf21
   cf04:
     enabled: true
     uri: radio://0/100/2M/E7E7E7E704
-    initial_position: [0, 0, 0]
+    initial_position: [3.0, 2.5, 0]
     type: cf21
   cf08:
     enabled: false
@@ -23,7 +23,7 @@ robots:
   cf10:
     enabled: true 
     uri: radio://0/120/2M/E7E7E7E70A
-    initial_position: [-1, 0, 0]
+    initial_position: [1.5, 1.0, 0]
     type: cf21
 
 # Definition of the various robot types
