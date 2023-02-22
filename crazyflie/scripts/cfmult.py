@@ -43,7 +43,7 @@ def main():
             help="Last 1-2 characters of UID's of each of the crazyflies in hex.")
     
     yaml_parser = sub_parser.add_parser("yaml", help="Load radio addressed via yaml file")
-    yaml_parser.add_argument("configpath",
+    yaml_parser.add_argument("-C", "--configpath",
 		default=Path(__file__).parent.parent.resolve() / "config",
 		help="Path to the configuration *.yaml files")
 
