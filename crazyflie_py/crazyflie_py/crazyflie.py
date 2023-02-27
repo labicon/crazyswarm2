@@ -733,7 +733,7 @@ class CrazyflieServer(rclpy.node.Node):
                 transform.transform.rotation.w,
                 ])
             self.pose[transform.child_frame_id] = (position_i, rotation_i)
-        print(f'measured pose is {self.pose}')
+
     @property
     def position(self):
         return np.vstack([pose[0] for pose in self.pose.values()])
@@ -819,12 +819,6 @@ class CrazyflieServer(rclpy.node.Node):
         req.yaw = yaw
         req.duration = rclpy.duration.Duration(seconds=duration).to_msg()
         self.goToService.call_async(req)
-
-    def goToAbsolute(self, goals, yaw=0.0, duration=2.0):
-        """Convenience command to send goTo's to all crazyflies at once"""
-        for pos, cf in zip(goals, self.crazyflies):
-            cf.goTo(pos, yaw, duration)
-            # cf.cmdPosition(pos, yaw)
 
     def startTrajectory(self, trajectoryId, timescale = 1.0, reverse = False, relative = True, groupMask = 0):
         """Broadcasted - begins executing a previously uploaded trajectory.
