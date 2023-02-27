@@ -3,32 +3,33 @@ robots:
   cf01:
     enabled: true
     uri: radio://*/80/2M/E7E7E7E701
-    initial_position: [-1, 0, 0]
+    initial_position: [0.0, -1.0, 0]
     type: cf21
   cf03:
     enabled: true
     uri: radio://*/100/2M/E7E7E7E703
-    initial_position: [0, 0, 0]
+    initial_position: [0.0, 0.0, 0]
     type: cf21
   cf04:
     enabled: true
     uri: radio://*/100/2M/E7E7E7E704
-    initial_position: [1, 0, 0]
+    initial_position: [-1.5, 0.0, 0]
     type: cf21
   cf07: # BAD. cf7 does not want to play.
     enabled: false
     uri: radio://*/80/2M/E7E7E7E707
     initial_position: [0.0, -1.0, 0]
     type: cf21
-  # cf08:
-    # enabled: false
-    # uri: radio://*/120/2M/E7E7E7E708
-    # initial_position: [2.0, 0.0, 0]
-    # type: cf21s
+  cf08:
+    enabled: true
+    uri: radio://*/120/2M/E7E7E7E708
+    initial_position: [0.7, 0.7, 0]
+    type: cf21
+  # cf10:
   cf10:
     enabled: true 
     uri: radio://*/120/2M/E7E7E7E70A
-    initial_position: [2, 0, 0]
+    initial_position: [1.5, 0.3, 0]
     type: cf21
 
 # Definition of the various robot types
