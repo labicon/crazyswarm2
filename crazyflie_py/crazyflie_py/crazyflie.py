@@ -689,12 +689,19 @@ class CrazyflieServer(rclpy.node.Node):
         self.setParamsService.wait_for_service()
 
         cfnames = []
+        self.pose = {}
         for srv_name, srv_types in self.get_service_names_and_types():
             if "crazyflie_interfaces/srv/StartTrajectory" in srv_types:
                 # remove "/" and "/start_trajectory"
                 cfname = srv_name[1:-17]
                 if cfname != "all":
+                    self.pose[cfname] = (np.zeros(3), np.zeros(3))
                     cfnames.append(cfname)
+        
+        # NOTE: this is necessary for tracking of rigid body objects for cases where 
+        # measurements get missed.
+        # self.pose['human01'] = (np.zeros(3), np.zeros(3))
+        # self.pose['human02'] = (np.zeros(3), np.zeros(3))
 
         self.crazyflies = []
         self.crazyfliesById = dict()
@@ -710,7 +717,6 @@ class CrazyflieServer(rclpy.node.Node):
         # Create cf pose subscriber
         self.subscriber = self.create_subscription(TFMessage, 'tf', self.pose_cb, 0)
         # Position and quaternion in world frame.
-        self.pose = {}
 
     def pose_cb(self, msg):
         """Update the server's understanding of the poses for each crazyflie
